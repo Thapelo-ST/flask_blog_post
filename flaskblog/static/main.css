@@ -81,11 +81,14 @@ a.article-title:hover {
 
 .account-heading {
     font-size: 2.5rem;
+    display: inline-block;
+    position: relative;
 }
 
 .navbar-nav {
     margin-right: auto;
 }
+
 
 .footer {
     position: fixed;
