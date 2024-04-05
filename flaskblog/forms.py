@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import BooleanField, StringField, PasswordField, SubmitField, ValidationError
+from wtforms import BooleanField, StringField, PasswordField, SubmitField, TextAreaField, ValidationError
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from flaskblog.models  import User
 
@@ -55,3 +55,24 @@ class UpdateAccountForm(FlaskForm):
             user = User.query.filter_by(email=email.data).first()
             if user:
                 raise ValidationError('That email already exists. Try logging in, or using another email')
+            
+class PostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    content = TextAreaField('Content', validators= [DataRequired()])
+    submit = SubmitField('Post')
+
+class RequestResetForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    def validate_email(self, email):
+        """checks if the username is already in use"""
+        user = User.query.filter_by(email=email.data).first()
+        if user is None:
+            raise ValidationError('No account with that email please register')
+    submit = SubmitField('Request Password Reset')
+    
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm password', validators=[DataRequired(),
+                                                                    EqualTo('password')])
+    submit = SubmitField('Reset Pasword')
+    
